@@ -11,28 +11,35 @@ fn integer_to_binary(integer: i64) -> String {
     }
     if integer < 0 {
         binary = "1".to_string() + &binary.to_string();
+    } else {
+        binary = "0".to_string() + &binary.to_string();
     }
     return binary;
 }
 
-fn binary_to_integer(binary: String) -> i64 {
-    let mut integer: i64 = 0;
-    let mut aux: i64 = 0;
-    for n in binary.chars() {
-        let digit: i64 = n.to_digit(10).unwrap() as i64;
-        let pot: i64 = (2 as i64).pow(aux as u32);
-        integer = integer + digit * pot;
-        aux = aux + 1;
-    }
-    if binary.chars().nth(0).unwrap() == '1' {
-        integer = integer - 255;
+fn binary_to_integer(binary: String) -> i16 {
+    let mut integer: i16 = 0;
+
+    let mut aux = binary.chars();
+    let mut bit;
+
+    for j in 0..8 {
+        bit = aux.next().unwrap();
+        let digit: i16 = bit.to_digit(10).unwrap() as i16;
+        if digit == 1 {
+            let pot: i16 = (2 as i16).pow((7 - j) as u32);
+            integer = integer + digit * pot;
+            if j == 0 {
+                integer = integer - 255;
+            }
+        }
     }
 
     return integer;
 }
 
 fn float_to_binary(float: f32) -> String {
-    let mut binary: String = "".to_string();
+    let mut binary: String;
     let mut aux: f32 = float;
 
     if float < 0.0 {
@@ -110,7 +117,6 @@ fn binary_to_float(binary: String) -> f32 {
     if bit == '1' {
         signal = -1;
     }
-    
     for j in 1..4 {
         bit = aux.next().unwrap();
         let digit: i8 = bit.to_digit(10).unwrap() as i8;
@@ -138,11 +144,46 @@ fn binary_to_float(binary: String) -> f32 {
 
 fn main() {
     // TODO: Caso o número não possa ser representado, o usuário deve ser informado.
-    let binary: String = integer_to_binary(-126);
-    let integer: i64 = binary_to_integer("10000001".to_string());
-    println!("Binary: {} \nInteger: {}\n", binary, integer);
+    let args: Vec<String> = std::env::args().collect();
 
-    let binary_f: String = float_to_binary(0.40625 as f32);
-    let float: f32 = binary_to_float("11100111".to_string());
-    println!("Float: {}\nDecimal: {}", binary_f, float);
+    if args.len() == 3 {
+        let string: String = args[1].to_string();
+        if string == "integer_to_binary" {
+            let integer: i64 = args[2].parse().unwrap();
+            if integer < -127 || integer > 127 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", integer_to_binary(integer));
+            }
+        }
+        if string == "binary_to_integer" {
+            let binary: String = args[2].to_string();
+            if binary.chars().count() != 8 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", binary_to_integer(binary));
+            }
+        }
+        if string == "float_to_binary" {
+            let float: f32 = args[2].parse().unwrap();
+            println!("{}", float_to_binary(float));
+        }
+        if string == "binary_to_float" {
+            let binary: String = args[2].to_string();
+            if binary.chars().count() != 8 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", binary_to_float(binary));
+            }
+        }
+    } else if args.len() == 1 {
+        println!("Exemplos: \n ");
+        let binary: String = integer_to_binary(-126);
+        let integer: i16 = binary_to_integer("10000001".to_string());
+        println!("Binary: {} \nInteger: {}\n", binary, integer);
+
+        let binary_f: String = float_to_binary(0.40625 as f32);
+        let float: f32 = binary_to_float("00011010".to_string());
+        println!("Float: {}\nDecimal: {}", binary_f, float);
+    }
 }
