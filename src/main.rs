@@ -166,7 +166,11 @@ fn main() {
         }
         if string == "float_to_binary" {
             let float: f32 = args[2].parse().unwrap();
-            println!("{}", float_to_binary(float));
+            if (float.trunc() as i32) <= -32 || (float.trunc() as i32) >= 32 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", float_to_binary(float));
+            }
         }
         if string == "binary_to_float" {
             let binary: String = args[2].to_string();
