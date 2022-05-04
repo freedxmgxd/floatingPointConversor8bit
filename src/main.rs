@@ -143,7 +143,6 @@ fn binary_to_float(binary: String) -> f32 {
 }
 
 fn main() {
-    // TODO: Caso o número não possa ser representado, o usuário deve ser informado.
     let args: Vec<String> = std::env::args().collect();
 
     if args.len() == 3 {
@@ -190,4 +189,11 @@ fn main() {
         let float: f32 = binary_to_float("00011010".to_string());
         println!("Float: {}\nDecimal: {}", binary_f, float);
     }
+    let equipe: Vec<&str> = vec!["Joelton D. Junior", "Leonardo Cerqueira", "André Bastos", "Ângelo José Pereira Ribeiro", "Lidianne Frederico", "Matheus Silva"];
+    
+    println!("Equipe do Projeto 1:");
+    for i in equipe {
+        println!("{}", i);
+    }
+
 }
