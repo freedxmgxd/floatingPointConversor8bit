@@ -180,20 +180,97 @@ fn main() {
             }
         }
     } else if args.len() == 1 {
-        println!("Exemplos: \n ");
-        let binary: String = integer_to_binary(-126);
-        let integer: i16 = binary_to_integer("10000001".to_string());
-        println!("Binary: {} \nInteger: {}\n", binary, integer);
+        let mut operation: String = "".to_string();
+        println!("Qual o tipo de conversão deseja fazer?\n1 - Integer para Binary\n2 - Binary para Integer\n3 - Float para Binary\n4 - Binary para Float\n");
+        std::io::stdin()
+            .read_line(&mut operation)
+            .expect("Failed to read line");
 
-        let binary_f: String = float_to_binary(0.40625 as f32);
-        let float: f32 = binary_to_float("00011010".to_string());
-        println!("Float: {}\nDecimal: {}", binary_f, float);
+        let operation: u8 = match operation.trim().parse() {
+            Ok(num) => num,
+            Err(_) => 0,
+        };
+
+        if operation == 1 {
+            let mut integer: String = "".to_string();
+
+            println!("Digite o número inteiro: ");
+
+            std::io::stdin()
+                .read_line(&mut integer)
+                .expect("Failed to read line");
+            let integer: i64 = match integer.trim().parse() {
+                Ok(num) => num,
+                Err(_) => 0,
+            };
+            if integer < -127 || integer > 127 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", integer_to_binary(integer));
+            }
+        } else if operation == 2 {
+            println!("Digite o número binário: ");
+            let mut binary: String = "".to_string();
+            std::io::stdin()
+                .read_line(&mut binary)
+                .expect("Failed to read line");
+
+            let binary: String = match binary.trim().parse() {
+                Ok(num) => num,
+                Err(_) => "".to_string(),
+            };
+
+            if binary.chars().count() != 8 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", binary_to_integer(binary));
+            }
+        } else if operation == 3 {
+            println!("Digite o número float: ");
+            let mut float: String = "".to_string();
+            std::io::stdin()
+                .read_line(&mut float)
+                .expect("Failed to read line");
+            let float: f32 = match float.trim().parse() {
+                Ok(num) => num,
+                Err(_) => 0.0,
+            };
+            if (float.trunc() as i32) <= -32 || (float.trunc() as i32) >= 32 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", float_to_binary(float));
+            }
+        } else if operation == 4 {
+            println!("Digite o número binário: ");
+            let mut binary: String = "".to_string();
+            std::io::stdin()
+                .read_line(&mut binary)
+                .expect("Failed to read line");
+            let binary: String = match binary.trim().parse() {
+                Ok(num) => num,
+                Err(_) => "".to_string(),
+            };
+            if binary.chars().count() != 8 {
+                println!("{}", "Número não pode ser representado.");
+            } else {
+                println!("{}", binary_to_float(binary));
+            }
+        } else {
+            println!("{}", "Opção inválida.");
+        }
     }
-    let equipe: Vec<&str> = vec!["Joelton D. Junior", "Leonardo Cerqueira", "André Bastos", "Ângelo José Pereira Ribeiro", "Lidianne Frederico", "Matheus Silva"];
-    
-    println!("Equipe do Projeto 1:");
+
+    let equipe: Vec<&str> = vec![
+        "Joelton D. Junior",
+        "Leonardo Cerqueira",
+        "André Bastos",
+        "Ângelo José Pereira Ribeiro",
+        "Lidianne Frederico",
+        "Matheus Silva",
+    ];
+
+    println!("\nEquipe do Projeto 1:");
     for i in equipe {
         println!("{}", i);
     }
-
 }
